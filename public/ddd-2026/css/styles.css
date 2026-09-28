@@ -69,6 +69,14 @@
   }
 }
 
+/* Phones turned sideways: wider than the phone breakpoint but only ~340–390px
+   tall, so buttons slim down to give the content room. No booth device is this short. */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --tap: 44px;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -343,6 +351,29 @@ p {
   .tiles {
     grid-template-rows: none;
     grid-auto-rows: minmax(160px, auto);
+  }
+}
+
+/* Sideways phones scroll too, keeping the landscape grid. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .home {
+    display: block;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: var(--gutter);
+  }
+
+  .home-header {
+    margin-bottom: var(--gutter);
+  }
+
+  .home .badge {
+    width: 72px;
+  }
+
+  .tiles {
+    grid-template-rows: none;
+    grid-auto-rows: minmax(120px, auto);
   }
 }
 

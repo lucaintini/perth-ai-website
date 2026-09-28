@@ -29,6 +29,15 @@
   background: linear-gradient(180deg, rgb(5 10 23 / 0.7) 55%, rgb(5 10 23 / 0.15));
 }
 
+/* Sideways phones: the leaderboard can run past the bottom, so the panel scrolls. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .runner-panel {
+    padding-bottom: var(--gutter);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
 .runner-panel.results-panel {
   padding-bottom: var(--gutter);
   background: rgb(5 10 23 / 0.72);
@@ -225,6 +234,36 @@
   font-size: var(--text-base);
   line-height: 1.4;
   color: var(--ink-600);
+}
+
+/* Sideways phones: a slimmer card so it doesn't cover the jump. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .gate-card {
+    top: calc(var(--gutter) + var(--tap) * 0.85 + 6px);
+    padding: 8px 16px;
+    box-shadow: 0 6px 0 rgb(0 0 0 / 0.35);
+  }
+
+  .gate-card .gate-meta {
+    margin-bottom: 0.2em;
+    font-size: 12px;
+  }
+
+  .gate-card .gate-q,
+  .gate-card .gate-verdict {
+    font-size: 17px;
+  }
+
+  .gate-card .gate-how {
+    margin-top: 0.3em;
+    font-size: 13px;
+  }
+
+  .gate-card .gate-why {
+    margin-top: 0.2em;
+    font-size: 14px;
+    line-height: 1.3;
+  }
 }
 
 /* attract mode */
