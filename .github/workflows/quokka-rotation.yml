@@ -1,0 +1,30 @@
+name: Quokka Run layout and rotation
+# Only runs when the kiosk itself changes (Kristina, 28 Sep 2026: it was running
+# on every PR). Emulates the booth screen, iPad and phones with a FULL
+# leaderboard and checks: the booth and iPad never need scrolling to reach Start,
+# the ground is never mid-screen in portrait, and a mid-run rotation keeps the run.
+on:
+  push:
+    branches: [fix/quokka-rotation]
+    paths: ['public/ddd-2026/**', 'tests/rotation/**', 'playwright.config.mjs', '.github/workflows/quokka-rotation.yml']
+  pull_request:
+    paths: ['public/ddd-2026/**', 'tests/rotation/**', 'playwright.config.mjs', '.github/workflows/quokka-rotation.yml']
+  workflow_dispatch:
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm init -y
+      - run: npm i -D @playwright/test http-server
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config playwright.config.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quokka-screenshots
+          path: test-results/shots/
+          if-no-files-found: warn
