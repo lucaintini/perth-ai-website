@@ -114,15 +114,32 @@ export function createEngine(canvas, {
     if (!w || !h) return;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
-    // Landscape shows ~900 units across; portrait zooms in a little and lifts
-    // the ground towards the middle rather than leaving a tall empty sky.
-    const scale = Math.min(h / 540, w / 700);
+    // Zoom from a target visible width so the quokka and obstacles stay a usable
+    // size in every orientation. A narrow portrait phone used to zoom the world
+    // right out, leaving the ground stranded mid-screen with an empty lower half.
+    const portrait = h > w;
+    const targetW = portrait ? 620 : 900;
+    let scale = w / targetW;
+    scale = Math.min(scale, h / 460); // keep world height >= 460 so the 250-tall gates still fit above the ground
     W = w / scale;
     H = h / scale;
-    G = Math.min(H - Math.max(80, H * 0.16), 540 + H * 0.1);
+    // Ground sits low in every orientation, road filling below it, so nothing
+    // floats and there is no empty half in portrait.
+    G = Math.round(H * (portrait ? 0.74 : 0.82));
+    // Tell the CSS skyline where the ground is so the buildings stand on it
+    // rather than at the bottom of the screen (which left them under the road).
+    if (canvas.parentElement) {
+      canvas.parentElement.style.setProperty('--ground-px', Math.max(0, Math.round(h - G * scale)) + 'px');
+    }
     ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
     ctx.imageSmoothingEnabled = false;
   }
+  // Re-fit on rotation and viewport changes (iOS Safari fires visualViewport,
+  // not always resize). These are removed in stop() so they do not accumulate
+  // across runs.
+  const onViewport = () => resize();
+  window.addEventListener('orientationchange', onViewport);
+  window.visualViewport && window.visualViewport.addEventListener('resize', onViewport);
   const ro = new ResizeObserver(resize);
   ro.observe(canvas);
   resize();
@@ -411,6 +428,8 @@ export function createEngine(canvas, {
     stop() {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      window.removeEventListener('orientationchange', onViewport);
+      window.visualViewport && window.visualViewport.removeEventListener('resize', onViewport);
     },
   };
 }

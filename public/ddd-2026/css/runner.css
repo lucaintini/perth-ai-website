@@ -2,6 +2,10 @@
 
 .runner .skyline {
   opacity: 0.22;
+  /* Stand the skyline on the game's ground line (set by runner.js on every
+     resize) so the buildings do not float under the road in portrait. Falls
+     back to the old position before JS runs. */
+  bottom: var(--ground-px, -2vh);
 }
 
 .runner-canvas {
