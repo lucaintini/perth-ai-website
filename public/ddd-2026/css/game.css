@@ -17,6 +17,58 @@
   }
 }
 
+/* Sideways phones: the start button and prize move to the top of the right-hand
+   column, above the leaderboard, so they're on screen without scrolling. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .game-intro {
+    grid-template-rows: auto auto auto 1fr;
+    column-gap: var(--gutter);
+    row-gap: 0;
+    align-items: start;
+    flex: none;
+    padding-top: calc(var(--tap) * 0.85 + 8px);
+  }
+
+  .game-intro > div:first-child {
+    display: contents;
+  }
+
+  .game-intro .eyebrow {
+    grid-area: 1 / 1;
+  }
+
+  .game-intro .game-title {
+    grid-area: 2 / 1;
+  }
+
+  .game-intro .rules {
+    grid-area: 3 / 1 / 5;
+    margin: 0.8em 0 0;
+    gap: 0.4em;
+    font-size: var(--text-base);
+  }
+
+  .game-intro .btn-start {
+    grid-area: 1 / 2 / 3;
+    align-self: center;
+    min-height: var(--tap);
+  }
+
+  .game-intro .prize {
+    grid-area: 3 / 2;
+    margin: 0.8em 0;
+    font-size: var(--text-sm);
+  }
+
+  .game-intro br {
+    display: none;
+  }
+
+  .game-intro .board {
+    grid-area: 4 / 2;
+  }
+}
+
 .game-title {
   font-size: calc(var(--text-3xl) * 1.15);
 }
